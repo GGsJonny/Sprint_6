@@ -1,74 +1,38 @@
+from pages.transitions_page import TransitionPage
+from pages.main_page import MainPage
+from pages.order_page import OrderPage
+import data
 import allure
 import pytest
-from locators.questions_page_locators import QuestionsPageLocators
-from page_objects.questions_page import ImportantQuestions
 
+@allure.suite('Тесты переходов по ссылкам в хэдере')
+class TestTransitionPage:
 
-class TestQuestionsSection:
+    @allure.title('Переход на страницу "Самоката" по логотипу "Самоката"')
+    @allure.description('Кликаем на кнопку «Заказать» вверху страницы, переходим к форме заказа, '
+                        'кликаем на логотип "Самоката" и проверяем переход на главную страницу')
+    def test_transition_by_scooter_logo(self, driver):
+        main_page = MainPage(driver)
+        main_page.accept_cookies()
+        main_page.go_to_order_page()
 
-    answers = [
-        "Сутки — 400 рублей. Оплата курьеру — наличными или картой.",
-        "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.",
-        "Допустим, вы оформляете заказ на 18 июля. Мы привозим самокат 18 июля в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 18 июля в 21:00, суточная аренда закончится 19 июля в 21:00.",
-        "Только начиная с завтрашнего дня. Но скоро станем расторопнее.",
-        "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.",
-        "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.",
-        "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.",
-        "Да, обязательно. Всем самокатов! И Москве, и Московской области.",
-    ]
+        order_page = OrderPage(driver)
+        header = order_page.get_person_info_header()
+        assert header.text == data.PERSON_INFO_HEADER
 
-    @allure.title("Тесты для раздела «Вопросы о важном»")
-    @allure.step("Проверка, что когда нажимаешь на стрелочку, открывается ожидаемый текст ответа")
-    @pytest.mark.parametrize("q, a, answers",
-        [
-            [
-                QuestionsPageLocators.question_price,
-                QuestionsPageLocators.answer_price,
-                answers[0],
-            ],
-            [
-                QuestionsPageLocators.question_need_several,
-                QuestionsPageLocators.answer_need_several,
-                answers[1],
-            ],
-            [
-                QuestionsPageLocators.question_time_calculation,
-                QuestionsPageLocators.answer_time_calculation,
-                answers[2],
-            ],
-            [
-                QuestionsPageLocators.question_book_for_today,
-                QuestionsPageLocators.answer_book_for_today,
-                answers[3],
-            ],
-            [
-                QuestionsPageLocators.question_prolongation_and_return,
-                QuestionsPageLocators.answer_prolongation_and_return,
-                answers[4],
-            ],
-            [
-                QuestionsPageLocators.question_charging_adapter,
-                QuestionsPageLocators.answer_charging_adapter,
-                answers[5],
-            ],
-            [
-                QuestionsPageLocators.question_cancellation,
-                QuestionsPageLocators.answer_cancellation,
-                answers[6],
-            ],
-            [
-                QuestionsPageLocators.question_delivery_to_suburbs,
-                QuestionsPageLocators.answer_delivery_to_suburbs,
-                answers[7],
-            ],
-        ],
-    )
-    def test_check_answers(self, driver, q, a, answers):
-        questions_page = ImportantQuestions(driver)
-        questions_page.open_base_url()
-        questions_page.open_important_questions_section()
-        questions_page.click_cookie_consent()
-        questions_page.click_dropdown_menu_button(q)
-        questions_page.wait_until_element_is_visible(a)
+        page = TransitionPage(driver)
+        page.go_to_main_page_by_scooter_logo()
 
-        assert questions_page.find_page(a).text == answers
+        main_page_header_text = main_page.get_main_header_text()
+        assert data.HEADER_SCOOTER in main_page_header_text
+
+    @allure.title('Переход на страницу Дзен при нажатии на логотип "Яндекс"')
+    @allure.description('Кликаем на логотип «Яндекс» в хэдере, переходим на страницу Дзен и проверяем, '
+                        'что мы находимся на странице Дзен, найдя заголовок "Новости"')
+    def test_transition_by_yandex_logo(self, driver):
+        page = TransitionPage(driver)
+        page.accept_cookies()
+        page.go_to_dzen_by_yandex_logo()
+
+        dzen_news_title = page.get_dzen_news_title()
+        assert dzen_news_title == data.DZEN_NEWS_TITLE

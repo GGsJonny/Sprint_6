@@ -2,7 +2,6 @@ from pages.base_page import BasePage
 import locators.main_page_locators as locators
 import allure
 
-
 class MainPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)

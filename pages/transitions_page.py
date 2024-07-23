@@ -1,7 +1,6 @@
-from pages.base_page import BasePage
+from .base_page import BasePage
 import locators.transition_page_locators as locators
 import allure
-
 
 class TransitionPage(BasePage):
 

@@ -2,6 +2,24 @@
 __pycache__/
 *.py[cod]
 *$py.class
+# Git directory
+.git/
+
+# Pytest cache
+.pytest_cache/
+
+# Exclude specific files and folders
+locators/__init__.py
+locators/base_page_locators.py
+locators/booking_page_locators.py
+locators/questions_page_locators.py
+page_objects/
+tests/_init_.py
+tests/pytest.ini.txt
+tests/test.py
+tests/test_booking.py
+tests/test_questions.py
+conftest.py
 
 # C extensions
 *.so

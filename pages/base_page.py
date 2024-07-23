@@ -3,7 +3,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 import locators.main_page_locators as locators
 import allure
 
-
 class BasePage:
 
     def __init__(self, driver):
